@@ -64,6 +64,14 @@ RUN if [ "$ENABLE_PYTORCH_UPGRADE" = "true" ]; then \
 # Change working directory to ComfyUI
 WORKDIR /comfyui
 
+# Install required custom nodes for our workflow
+RUN mkdir -p custom_nodes \
+    && git clone https://github.com/cubiq/ComfyUI-TiledDiffusion.git               custom_nodes/ComfyUI-TiledDiffusion \
+    && git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git               custom_nodes/ComfyUI-Impact-Pack \
+    && git clone https://github.com/kohya-ss/sd-perturbed-attention.git            custom_nodes/sd-perturbed-attention \
+    && git clone https://github.com/rgthree/rgthree-comfy.git                      custom_nodes/rgthree-comfy \
+    && git clone https://github.com/WASasquatch/comfyui-post-processing-nodes.git  custom_nodes/comfyui-post-processing-nodes
+
 # Support for the network volume
 ADD src/extra_model_paths.yaml ./
 
