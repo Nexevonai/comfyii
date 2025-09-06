@@ -73,7 +73,7 @@ RUN mkdir -p custom_nodes \
     && git clone https://github.com/WASasquatch/comfyui-post-processing-nodes.git  custom_nodes/comfyui-post-processing-nodes
 
 # Support for the network volume
-ADD src/extra_model_paths.yaml ./
+ADD worker-comfyui/src/extra_model_paths.yaml ./
 
 # Go back to the root
 WORKDIR /
@@ -82,18 +82,18 @@ WORKDIR /
 RUN uv pip install runpod requests websocket-client
 
 # Add application code and scripts
-ADD src/start.sh handler.py test_input.json ./
+ADD worker-comfyui/src/start.sh worker-comfyui/handler.py worker-comfyui/test_input.json ./
 RUN chmod +x /start.sh
 
 # Add script to install custom nodes
-COPY scripts/comfy-node-install.sh /usr/local/bin/comfy-node-install
+COPY worker-comfyui/scripts/comfy-node-install.sh /usr/local/bin/comfy-node-install
 RUN chmod +x /usr/local/bin/comfy-node-install
 
 # Prevent pip from asking for confirmation during uninstall steps in custom nodes
 ENV PIP_NO_INPUT=1
 
 # Copy helper script to switch Manager network mode at container start
-COPY scripts/comfy-manager-set-mode.sh /usr/local/bin/comfy-manager-set-mode
+COPY worker-comfyui/scripts/comfy-manager-set-mode.sh /usr/local/bin/comfy-manager-set-mode
 RUN chmod +x /usr/local/bin/comfy-manager-set-mode
 
 # Set the default command to run when starting the container
